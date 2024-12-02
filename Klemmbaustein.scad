@@ -1,6 +1,9 @@
 echo(version=version());
 
-bloc(noppen_cnt_x = 10,noppen_cnt_y = 1,noppen_on_top = false,brick_height = 1,text_top = "hello world",text_size=12);
+//bloc(noppen_cnt_x = 10,noppen_cnt_y = 1,noppen_on_top = false,brick_height = 1,text_top = "hello world",text_size=12);
+translate([35,0,0]) bloc(text_flan = "Patrick",spolice = 5.2,text_flanup = 2);
+
+
 
 module bloc(noppen_cnt_x = 4,noppen_cnt_y = 2,noppen_on_top = 1,brick_height = 3, text_top = "",text_size=12) {
     // count of nubs in X //noppen_cnt_x = 10;
@@ -101,5 +104,11 @@ module bloc(noppen_cnt_x = 4,noppen_cnt_y = 2,noppen_on_top = 1,brick_height = 3
             translate([brick_x_crt/2,brick_y_crt/2,brick_height_crt])
                 linear_extrude(noppen_height)
                     text(text_top, size=text_size, halign="center", valign="center", language="de");
+    }
+    if (text_flan != "") {
+        color("green")
+            rotate([90,0,0]) translate([brick_x_crt/2,spolice/2+text_flanup,-0.5])
+            linear_extrude(noppen_height)
+            text(text_flan, size=spolice, halign="center", valign="center", language="fr");
     }
 } 
