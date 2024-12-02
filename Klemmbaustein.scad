@@ -5,7 +5,7 @@ translate([35,0,0]) bloc(text_flan = "Patrick",spolice = 5.2,text_flanup = 2);
 
 
 
-module bloc(noppen_cnt_x = 4,noppen_cnt_y = 2,noppen_on_top = 1,brick_height = 3, text_top = "",text_size=12) {
+module bloc(noppen_cnt_x = 4,noppen_cnt_y = 2,noppen_on_top = 1,brick_height = 3, text_top = "",text_size=12,text_flan="",spolice=12,text_flanup=0,pc=false) {
     // count of nubs in X //noppen_cnt_x = 10;
     // count of nubs in Y //noppen_cnt_y = 1;
     // boolean, if nubs should be rendered or not //noppen_on_top = false; // [true, false]
@@ -36,13 +36,13 @@ module bloc(noppen_cnt_x = 4,noppen_cnt_y = 2,noppen_on_top = 1,brick_height = 3
     
     color("red")
         difference() {
-            translate([0,0,0]) {
-                cube([brick_x_crt,brick_y_crt,brick_height_crt]);
-            }
-            translate([brick_wall,brick_wall,0]) {
-                cube([brick_x_crt - (2*brick_wall), 
+            translate([0,0,0]) cube([brick_x_crt,brick_y_crt,brick_height_crt]);
+            union() {
+                translate([brick_wall,brick_wall,0]) 
+                    cube([brick_x_crt - (2*brick_wall), 
                         brick_y_crt - (2*brick_wall), 
                         brick_height_crt - brick_wall_top]);
+                    if(pc) {translate([brick_x_crt*0.85,brick_y_crt,brick_height_crt/2]) rotate([90,0,45])cylinder(brick_height_crt*5,1,1,center=true);}       
             }
         }
         
