@@ -1,11 +1,15 @@
 echo(version=version());
 
+$fa = 1;
+$fs = 0.4;
+$fn = 100;
+
 //bloc(noppen_cnt_x = 10,noppen_cnt_y = 1,noppen_on_top = false,brick_height = 1,text_top = "hello world",text_size=12);
 translate([35,0,0]) bloc(text_flan = "Patrick",spolice = 5.2,text_flanup = 2,pc=true);
 
 
 
-module bloc(noppen_cnt_x = 4,noppen_cnt_y = 2,noppen_on_top = 1,brick_height = 3, text_top = "",text_size=12,text_flan="",spolice=12,text_flanup=0,pc=false) {
+module bloc(noppen_cnt_x = 4,noppen_cnt_y = 2,noppen_on_top = 1,brick_height = 3, text_top = "",text_size=12,text_flan="",spolice=12,text_flanup=0,pc=false,noppen_diameter_mod=0.2) {
     // count of nubs in X //noppen_cnt_x = 10;
     // count of nubs in Y //noppen_cnt_y = 1;
     // boolean, if nubs should be rendered or not //noppen_on_top = false; // [true, false]
@@ -18,7 +22,7 @@ module bloc(noppen_cnt_x = 4,noppen_cnt_y = 2,noppen_on_top = 1,brick_height = 3
     grid_base = 8;
     grid_offset = 0.2;
     noppen_height = lego_unit; // 1.6
-    noppen_diameter = 3 * lego_unit; // 4.8
+    noppen_diameter = 3 * lego_unit+noppen_diameter_mod; // 4.8
     noppen_radius = noppen_diameter / 2;
     brick_wall = 1.2;
     brick_wall_top = 1;
@@ -29,11 +33,8 @@ module bloc(noppen_cnt_x = 4,noppen_cnt_y = 2,noppen_on_top = 1,brick_height = 3
     brick_height_crt = brick_baseheight / 3 * brick_height;
     brick_x_crt = (noppen_cnt_x * grid_base) - grid_offset;
     brick_y_crt = (noppen_cnt_y * grid_base) - grid_offset;
-    noppen_offset_outer = (grid_base - grid_offset) / 2;
-    
-    $fa = 1;
-    $fs = 0.4;
-    
+    noppen_offset_outer = (grid_base - grid_offset) / 2;    
+ 
     color("red")
         difference() {
             translate([0,0,0]) cube([brick_x_crt,brick_y_crt,brick_height_crt]);
