@@ -1,7 +1,7 @@
 echo(version=version());
 
 //bloc(noppen_cnt_x = 10,noppen_cnt_y = 1,noppen_on_top = false,brick_height = 1,text_top = "hello world",text_size=12);
-translate([35,0,0]) bloc(text_flan = "Patrick",spolice = 5.2,text_flanup = 2);
+translate([35,0,0]) bloc(text_flan = "Patrick",spolice = 5.2,text_flanup = 2,pc=true);
 
 
 
@@ -87,12 +87,14 @@ module bloc(noppen_cnt_x = 4,noppen_cnt_y = 2,noppen_on_top = 1,brick_height = 3
             }
         }
         else {
-            for (x=[1:1:noppen_cnt_x - 1]) {
+            color("blue") for (x=[1:1:noppen_cnt_x - 1]) {
                 for (y=[1:1:noppen_cnt_y - 1]) {
                     translate([x*grid_base - grid_offset/2,y*grid_base - grid_offset/2,0])
                         difference() {
-                            cylinder(h=brick_height_crt-brick_wall,
-                                        r=cylinder_diameter_outer/2);
+                            union() {
+                                translate([0,0,brick_height_crt-brick_wall*4]) cube([brick_wall_top,brick_y_crt,brick_height_crt],center=true);
+                                cylinder(h=brick_height_crt-brick_wall,r=cylinder_diameter_outer/2);
+                            }
                             cylinder(h=brick_height_crt-brick_wall,
                                         r=cylinder_diameter_inner/2);
                         }
