@@ -1,0 +1,34 @@
+{
+    "parameterSets": {
+        "basicbrick_2x4_normal": {
+            "brick_height": "3",
+            "nubs_cnt_x": "4",
+            "nubs_cnt_y": "2",
+            "nubs_on_top": "true",
+            "text_size": "12",
+            "text_position": ""
+        },
+		"basicbrick_8x2_normal_text": {
+            "brick_height": "3",
+            "nubs_cnt_x": "4",
+            "nubs_cnt_y": "2",
+            "nubs_on_top": "false",
+			"text_on_brick": "Hello World",
+            "text_size": "12",
+            "text_position": "top",
+			"text_language": "en"
+        },
+        "basicbrick_8x2_plate": {
+            "brick_height": "1",
+            "nubs_cnt_x": "8",
+            "nubs_cnt_y": "2",
+            "nubs_on_top": "true",
+            "text_size": "12",
+            "text_position": ""
+        }
+    },
+    "parameterSets": "",
+    "parameterSets": "",
+    "fileFormatVersion": "1",
+    "parameterSets": ""
+}
