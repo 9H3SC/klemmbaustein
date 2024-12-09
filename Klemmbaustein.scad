@@ -17,6 +17,7 @@ text_position = "frontback"; // where to extrude the text ["top", "front", "fron
 text_language = "de"; // which language for the text (use two letter code) [i.e. "de", "fr", etc.]
 text_offset_y = 1.5; // text offset in text-up/down-direction
 keyring_diameter = 0; // want a keyring-hole ? sets diameter of keyring (bigger than 0)
+strong_brick = false;
 
 //Circle resolution
 // $fa the minimum angle for a fragment. see https://en.wikibooks.org/wiki/OpenSCAD_User_Manual/Other_Language_Features#$fs
@@ -28,7 +29,7 @@ $fs = $preview ? 2 : 0.4;
 /* 
 calling module with parameters
 */
-brick(nubs_cnt_x, nubs_cnt_y, nubs_on_top, brick_height, text_on_brick, text_size, text_position, text_language, text_offset_y, nubs_diameter_mod, keyring_diameter);
+brick(nubs_cnt_x, nubs_cnt_y, nubs_on_top, brick_height, text_on_brick, text_size, text_position, text_language, text_offset_y, nubs_diameter_mod, keyring_diameter, strong_brick);
 
 /*
 module brick
@@ -43,8 +44,9 @@ module brick
 - text_language (for accents etc.) // (use two letter code) // [i.e. "de", "fr", etc.]
 - text offset in text-up/down-direction // text_offset_y = 0
 - keyring-diameter // keyring_diameter = 1
+- strong_brick // Boolean to add so much wall under the brick
 */
-module brick(nubs_cnt_x = 4, nubs_cnt_y = 2, nubs_on_top = true, brick_height = 3, text_on_brick = "",text_size = 12, text_position = "", text_language = "de", text_offset_y = 0, nubs_diameter_mod = 0, keyring_diameter = 1) {
+module brick(nubs_cnt_x = 4, nubs_cnt_y = 2, nubs_on_top = true, brick_height = 3, text_on_brick = "",text_size = 12, text_position = "", text_language = "de", text_offset_y = 0, nubs_diameter_mod = 0, keyring_diameter = 1, strong_brick=false) {
     
     lego_unit = 1.6;
     
@@ -119,7 +121,7 @@ module brick(nubs_cnt_x = 4, nubs_cnt_y = 2, nubs_on_top = true, brick_height = 
             }
             else {
                 for (x=[1:1:nubs_cnt_x - 1]) {
-                    if (x%2 == 0) { 
+                    if ((strong_brick) || (x%2 == 0)) { 
                         translate([x*grid_base - brick_wall/2, 0, 0]) {
                             difference() {
                                 cube([brick_wall_top, brick_y_crt, brick_height_crt]);
