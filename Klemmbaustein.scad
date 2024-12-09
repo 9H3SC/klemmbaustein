@@ -5,20 +5,20 @@ echo(version=version());
 initial parameters
 change these to create your brick
 */
-nubs_cnt_x = 8;             // count of nubs in X
-nubs_cnt_y = 2;             // count of nubs in Y
-nubs_on_top = true;         // boolean, if nubs should be rendered or not [true, false]
-nubs_diameter_mod = 0;      // increases the nub-diameter for 3D-Printing reasons (i.e. 0.2)
+nubs_cnt_x = 8; // count of nubs in X
+nubs_cnt_y = 2; // count of nubs in Y
+nubs_on_top = true; // boolean, if nubs should be rendered or not [true, false]
+nubs_diameter_mod = 0; // increases the nub-diameter for 3D-Printing reasons (i.e. 0.2)
 
-brick_height = 3;           // height of brick in lego-units (1=plate, 3=normal height) [1,2,3,4,5,6]
-text_on_brick = "";         // text (if wanted) on top surface - if text on top set nubs_on_top = false (otherwise no text)!
-text_size = 7;              // text-size (12 suits best for top text and count of nubs in y = 2)
-text_position = "top";      // where to extrude the text ["top", "front"]
-text_language = "de";       // which language for the text (use two letter code) [i.e. "de", "fr", etc.]
-text_offset_y = 0;          // text offset in text-up/down-direction
+brick_height = 3; // height of brick in lego-units (1=plate, 3=normal height) [1,2,3,4,5,6]
+text_on_brick = "Hello"; // text (if wanted) on top surface - if text on top set nubs_on_top = false (otherwise no text)!
+text_size = 7; // text-size (12 suits best for top text and count of nubs in y = 2)
+text_position = "frontback"; // where to extrude the text ["top", "front", "frontback"]
+text_language = "de"; // which language for the text (use two letter code) [i.e. "de", "fr", etc.]
+text_offset_y = 1.5; // text offset in text-up/down-direction
 
-keyring_hole = false;       // want a keyring-hole? set to true [false, true]
-keyring_diameter = 1.5;     // sets diameter of keyring
+keyring_hole = false; // want a keyring-hole? set to true [false, true]
+keyring_diameter = 1.5; // sets diameter of keyring
 
 //Circle resolution
 // $fa the minimum angle for a fragment. see https://en.wikibooks.org/wiki/OpenSCAD_User_Manual/Other_Language_Features#$fs
@@ -158,10 +158,22 @@ module brick(nubs_cnt_x = 4, nubs_cnt_y = 2, nubs_on_top = true, brick_height = 
                 linear_extrude(nubs_height)
                     text(text_on_brick, size=text_size, halign="center", valign="center", language=text_language);
     }
-    if (text_position == "front") {
-        color("green")
-            rotate([90,0,0]) translate([brick_x_crt/2,text_size/2+text_offset_y,-0.5])
-            linear_extrude(nubs_height)
-            text(text_on_brick, size=text_size, halign="center", valign="center", language=text_language);
+    if (text_position == "front" || text_position == "frontback") {
+        color("green") {
+            rotate([90,0,0]) {
+                translate([brick_x_crt/2,text_size/2+text_offset_y,-0.5]) {
+                    linear_extrude(nubs_height)
+                    text(text_on_brick, size=text_size, halign="center", valign="center", language=text_language);
+                }
+            }
+            if (text_position == "frontback") {
+                rotate([90,0,180]) {
+                    translate([(brick_x_crt/2)*-1, text_size/2+text_offset_y, brick_y_crt]) {
+                        linear_extrude(nubs_height)
+                        text(text_on_brick, size=text_size, halign="center", valign="center", language=text_language);
+                    }
+                }
+            }
+        }
     }
 }
