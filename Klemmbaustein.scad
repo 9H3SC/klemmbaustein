@@ -16,9 +16,7 @@ text_size = 7; // text-size (12 suits best for top text and count of nubs in y =
 text_position = "frontback"; // where to extrude the text ["top", "front", "frontback"]
 text_language = "de"; // which language for the text (use two letter code) [i.e. "de", "fr", etc.]
 text_offset_y = 1.5; // text offset in text-up/down-direction
-
-keyring_hole = false; // want a keyring-hole? set to true [false, true]
-keyring_diameter = 1.5; // sets diameter of keyring
+keyring_diameter = 0; // want a keyring-hole ? sets diameter of keyring (bigger than 0)
 
 //Circle resolution
 // $fa the minimum angle for a fragment. see https://en.wikibooks.org/wiki/OpenSCAD_User_Manual/Other_Language_Features#$fs
@@ -30,7 +28,7 @@ $fs = $preview ? 2 : 0.4;
 /* 
 calling module with parameters
 */
-brick(nubs_cnt_x, nubs_cnt_y, nubs_on_top, brick_height, text_on_brick, text_size, text_position, text_language, text_offset_y, nubs_diameter_mod, keyring_hole, keyring_diameter);
+brick(nubs_cnt_x, nubs_cnt_y, nubs_on_top, brick_height, text_on_brick, text_size, text_position, text_language, text_offset_y, nubs_diameter_mod, keyring_diameter);
 
 /*
 module brick
@@ -44,10 +42,9 @@ module brick
 - text-position (top or front) // text_position = "top" ["top", "front"]
 - text_language (for accents etc.) // (use two letter code) // [i.e. "de", "fr", etc.]
 - text offset in text-up/down-direction // text_offset_y = 0
-- keyring-hole (if wanted) // [true, false]
-- keyring-diameter (if keyring-hole is true) // keyring_diameter = 1
+- keyring-diameter // keyring_diameter = 1
 */
-module brick(nubs_cnt_x = 4, nubs_cnt_y = 2, nubs_on_top = true, brick_height = 3, text_on_brick = "",text_size = 12, text_position = "", text_language = "de", text_offset_y = 0, nubs_diameter_mod = 0, keyring_hole = false, keyring_diameter = 1) {
+module brick(nubs_cnt_x = 4, nubs_cnt_y = 2, nubs_on_top = true, brick_height = 3, text_on_brick = "",text_size = 12, text_position = "", text_language = "de", text_offset_y = 0, nubs_diameter_mod = 0, keyring_diameter = 1) {
     
     lego_unit = 1.6;
     
@@ -146,7 +143,7 @@ module brick(nubs_cnt_x = 4, nubs_cnt_y = 2, nubs_on_top = true, brick_height = 
                 
             }
         }
-        if(keyring_hole) {
+        if(keyring_diameter > 0) {
                 translate([brick_x_crt*0.85,brick_y_crt,brick_height_crt/2]) {
                     rotate([90,0,45])cylinder(brick_height_crt*5,keyring_diameter,keyring_diameter,center=true);
                 }
