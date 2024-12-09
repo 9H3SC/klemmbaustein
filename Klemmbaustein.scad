@@ -11,9 +11,12 @@ nubs_on_top = true; // boolean, if nubs should be rendered or not [true, false]
 nubs_diameter_mod = 0; // increases the nub-diameter for 3D-Printing reasons (i.e. 0.2)
 
 brick_height = 3; // height of brick in lego-units (1=plate, 3=normal height) [1,2,3,4,5,6]
-text_on_brick = "Hello"; // text (if wanted) on top surface - if text on top set nubs_on_top = false (otherwise no text)!
-text_size = 7; // text-size (12 suits best for top text and count of nubs in y = 2)
-text_position = "frontback"; // where to extrude the text ["top", "front", "frontback"]
+text_on_top = "It's top here"; // text (if wanted, elswhere empty) - if text on top set nubs_on_top = false (otherwise no text)!
+text_on_front = "Front of you"; // text on the front side (if wanted, elsewhere empty)
+text_on_back = "Back to the brick"; // text on the front side (if wanted, elsewhere empty)
+text_sizeT = 7; // text-size (12 suits best for top text and count of nubs in y = 2) on the top
+text_sizeF = 7; // text-size (12 suits best for top text and count of nubs in y = 2) on the front
+text_sizeB = 7; // text-size (12 suits best for top text and count of nubs in y = 2) on the back
 text_language = "de"; // which language for the text (use two letter code) [i.e. "de", "fr", etc.]
 text_offset_y = 1.5; // text offset in text-up/down-direction
 keyring_diameter = 0; // want a keyring-hole ? sets diameter of keyring (bigger than 0)
@@ -29,7 +32,7 @@ $fs = $preview ? 2 : 0.4;
 /* 
 calling module with parameters
 */
-brick(nubs_cnt_x, nubs_cnt_y, nubs_on_top, brick_height, text_on_brick, text_size, text_position, text_language, text_offset_y, nubs_diameter_mod, keyring_diameter, strong_brick);
+brick(nubs_cnt_x, nubs_cnt_y, nubs_on_top, brick_height, text_on_top,text_sizeT,text_on_front,text_sizeF,text_on_back,text_sizeB, text_language, text_offset_y, nubs_diameter_mod, keyring_diameter, strong_brick);
 
 /*
 module brick
@@ -46,7 +49,7 @@ module brick
 - keyring-diameter // keyring_diameter = 1
 - strong_brick // Boolean to add so much wall under the brick
 */
-module brick(nubs_cnt_x = 4, nubs_cnt_y = 2, nubs_on_top = true, brick_height = 3, text_on_brick = "",text_size = 12, text_position = "", text_language = "de", text_offset_y = 0, nubs_diameter_mod = 0, keyring_diameter = 1, strong_brick=false) {
+module brick(nubs_cnt_x = 4, nubs_cnt_y = 2, nubs_on_top = true, brick_height = 3,  text_on_top,text_sizeT,text_on_front,text_sizeF,text_on_back,text_sizeB, text_language = "de", text_offset_y = 0, nubs_diameter_mod = 0, keyring_diameter = 1, strong_brick=false) {
     
     lego_unit = 1.6;
     
@@ -151,28 +154,21 @@ module brick(nubs_cnt_x = 4, nubs_cnt_y = 2, nubs_on_top = true, brick_height = 
                 }
         }
     }
-    if (text_position == "top" && !nubs_on_top) {
+
+    if (text_on_top != "" && !nubs_on_top) {
         color("green")
             translate([brick_x_crt/2,brick_y_crt/2+text_offset_y,brick_height_crt])
                 linear_extrude(nubs_height)
-                    text(text_on_brick, size=text_size, halign="center", valign="center", language=text_language);
+                    text(text_on_top, size=text_sizeT, halign="center", valign="center", language=text_language);
     }
-    if (text_position == "front" || text_position == "frontback") {
-        color("green") {
-            rotate([90,0,0]) {
-                translate([brick_x_crt/2,text_size/2+text_offset_y,-0.5]) {
-                    linear_extrude(nubs_height)
-                    text(text_on_brick, size=text_size, halign="center", valign="center", language=text_language);
-                }
-            }
-            if (text_position == "frontback") {
-                rotate([90,0,180]) {
-                    translate([(brick_x_crt/2)*-1, text_size/2+text_offset_y, brick_y_crt]) {
-                        linear_extrude(nubs_height)
-                        text(text_on_brick, size=text_size, halign="center", valign="center", language=text_language);
-                    }
-                }
-            }
+    if(text_on_front != "") {
+        color("green")
+            rotate([90,0,0]) translate([brick_x_crt/2,text_sizeF/2+text_offset_y,-0.5])
+                linear_extrude(nubs_height) text(text_on_front, size=text_sizeF, halign="center", valign="center", language=text_language);
         }
+    if(text_on_back != "") {
+        color("green")
+            rotate([90,0,180]) translate([(brick_x_crt/2)*-1, text_sizeB/2+text_offset_y, brick_y_crt])
+                linear_extrude(nubs_height) text(text_on_back, size=text_sizeB, halign="center", valign="center", language=text_language);
     }
 }
