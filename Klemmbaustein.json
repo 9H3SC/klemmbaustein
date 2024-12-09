@@ -8,15 +8,15 @@
             "text_size": "12",
             "text_position": ""
         },
-		"basicbrick_8x2_normal_text": {
+        "basicbrick_8x2_normal_text": {
             "brick_height": "3",
             "nubs_cnt_x": "4",
             "nubs_cnt_y": "2",
             "nubs_on_top": "false",
-			"text_on_brick": "Hello World",
+            "text_on_brick": "Hello World",
             "text_size": "12",
             "text_position": "top",
-			"text_language": "en"
+            "text_language": "en"
         },
         "basicbrick_8x2_plate": {
             "brick_height": "1",

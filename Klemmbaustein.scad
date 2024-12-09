@@ -5,21 +5,26 @@ echo(version=version());
 initial parameters
 change these to create your brick
 */
-nubs_cnt_x = 8; // count of nubs in X
-nubs_cnt_y = 2; // count of nubs in Y
-nubs_on_top = true; // boolean, if nubs should be rendered or not [true, false]
-nubs_diameter_mod = 0; // increases the nub-diameter for 3D-Printing reasons (i.e. 0.2)
+nubs_cnt_x = 8;             // count of nubs in X
+nubs_cnt_y = 2;             // count of nubs in Y
+nubs_on_top = true;         // boolean, if nubs should be rendered or not [true, false]
+nubs_diameter_mod = 0;      // increases the nub-diameter for 3D-Printing reasons (i.e. 0.2)
 
-brick_height = 3; // height of brick in lego-units (1=plate, 3=normal height) [1,2,3,4,5,6]
-text_on_brick = ""; // text (if wanted) on top surface - leave empty for no text - if text -> nubs_on_top = false!
-text_size = 7; // text-size (12 suits best for top text and count of nubs in y = 2)
-text_position = "top"; // where to extrude the text ["top", "front"]
-text_language = "de"; // which language for the text (use two letter code) [i.e. "de", "fr", etc.]
-text_offset_y = 0; // text offset in text-up/down-direction
+brick_height = 3;           // height of brick in lego-units (1=plate, 3=normal height) [1,2,3,4,5,6]
+text_on_brick = "";         // text (if wanted) on top surface - if text on top set nubs_on_top = false (otherwise no text)!
+text_size = 7;              // text-size (12 suits best for top text and count of nubs in y = 2)
+text_position = "top";      // where to extrude the text ["top", "front"]
+text_language = "de";       // which language for the text (use two letter code) [i.e. "de", "fr", etc.]
+text_offset_y = 0;          // text offset in text-up/down-direction
 
-keyring_hole = false; // want a keyring-hole? set to true [false, true]
-keyring_diameter = 1.5; // sets diameter of keyring
+keyring_hole = false;       // want a keyring-hole? set to true [false, true]
+keyring_diameter = 1.5;     // sets diameter of keyring
 
+//Circle resolution
+// $fa the minimum angle for a fragment. see https://en.wikibooks.org/wiki/OpenSCAD_User_Manual/Other_Language_Features#$fs
+$fa = $preview ? 12 : 1; 
+// $fs the minimum size of a fragment. see https://en.wikibooks.org/wiki/OpenSCAD_User_Manual/Other_Language_Features#$fs
+$fs = $preview ? 2 : 0.4; 
 // -------------------------------------------------------------------------------------------------------------------
 
 /* 
@@ -48,9 +53,9 @@ module brick(nubs_cnt_x = 4, nubs_cnt_y = 2, nubs_on_top = true, brick_height = 
     
     grid_base = 8;
     grid_offset = 0.2;
-    noppen_height = lego_unit; // 1.6
-    noppen_diameter = 3 * lego_unit+nubs_diameter_mod; // 4.8
-    noppen_radius = noppen_diameter / 2;
+    nubs_height = lego_unit; // 1.6
+    nubs_diameter = 3 * lego_unit+nubs_diameter_mod; // 4.8
+    nubs_radius = nubs_diameter / 2;
     brick_wall = 1.2;
     brick_wall_top = 1;
     cylinder_diameter_outer = 6.51;
@@ -60,7 +65,7 @@ module brick(nubs_cnt_x = 4, nubs_cnt_y = 2, nubs_on_top = true, brick_height = 
     brick_height_crt = brick_baseheight / 3 * brick_height;
     brick_x_crt = (nubs_cnt_x * grid_base) - grid_offset;
     brick_y_crt = (nubs_cnt_y * grid_base) - grid_offset;
-    noppen_offset_outer = (grid_base - grid_offset) / 2;    
+    nubs_offset_outer = (grid_base - grid_offset) / 2;    
  
     difference() { // for keyring-hole to get through whole brick
         color("red") {
@@ -78,10 +83,10 @@ module brick(nubs_cnt_x = 4, nubs_cnt_y = 2, nubs_on_top = true, brick_height = 
             if (nubs_on_top) {
                 for (x=[0:1:nubs_cnt_x - 1]) {
                     for (y=[0:1:nubs_cnt_y - 1]) {
-                        translate([noppen_offset_outer + (x*grid_base), 
-                                    noppen_offset_outer + (y*grid_base), 
+                        translate([nubs_offset_outer + (x*grid_base), 
+                                    nubs_offset_outer + (y*grid_base), 
                                     brick_height_crt]) {
-                                        cylinder(h=noppen_height,r=noppen_radius);
+                                        cylinder(h=nubs_height,r=nubs_radius);
                                     }
                     }
                 }
@@ -116,35 +121,47 @@ module brick(nubs_cnt_x = 4, nubs_cnt_y = 2, nubs_on_top = true, brick_height = 
                 }
             }
             else {
-                color("blue") for (x=[1:1:nubs_cnt_x - 1]) {
-                    for (y=[1:1:nubs_cnt_y - 1]) {
-                        translate([x*grid_base - grid_offset/2,y*grid_base - grid_offset/2,0])
+                for (x=[1:1:nubs_cnt_x - 1]) {
+                    if (x%2 == 0) { 
+                        translate([x*grid_base - brick_wall/2, 0, 0]) {
                             difference() {
-                                union() {
-                                    translate([0,0,brick_height_crt-brick_wall*4]) cube([brick_wall_top,brick_y_crt,brick_height_crt],center=true);
-                                    cylinder(h=brick_height_crt-brick_wall,r=cylinder_diameter_outer/2);
+                                cube([brick_wall_top, brick_y_crt, brick_height_crt]);
+                                for (y=[1:1:nubs_cnt_y - 1]) {
+                                    translate([brick_wall_top/2,y*grid_base - grid_offset/2,0]) {
+                                        cylinder(h=brick_height_crt-brick_wall, r=cylinder_diameter_inner/2);
+                                    }
                                 }
-                                cylinder(h=brick_height_crt-brick_wall,
-                                            r=cylinder_diameter_inner/2);
                             }
+                        }
+                    }
+                    for (y=[1:1:nubs_cnt_y - 1]) {
+                        translate([x*grid_base - grid_offset/2,y*grid_base - grid_offset/2,0]) {
+                            difference() {
+                                cylinder(h=brick_height_crt-brick_wall, r=cylinder_diameter_outer/2);
+                                cylinder(h=brick_height_crt-brick_wall, r=cylinder_diameter_inner/2);
+                            }
+                        }
                     }
                 }
+                
             }
         }
         if(keyring_hole) {
-                translate([brick_x_crt*0.85,brick_y_crt,brick_height_crt/2]) rotate([90,0,45])cylinder(brick_height_crt*5,keyring_diameter,keyring_diameter,center=true);
+                translate([brick_x_crt*0.85,brick_y_crt,brick_height_crt/2]) {
+                    rotate([90,0,45])cylinder(brick_height_crt*5,keyring_diameter,keyring_diameter,center=true);
+                }
         }
     }
     if (text_position == "top" && !nubs_on_top) {
         color("green")
             translate([brick_x_crt/2,brick_y_crt/2+text_offset_y,brick_height_crt])
-                linear_extrude(noppen_height)
+                linear_extrude(nubs_height)
                     text(text_on_brick, size=text_size, halign="center", valign="center", language=text_language);
     }
     if (text_position == "front") {
         color("green")
             rotate([90,0,0]) translate([brick_x_crt/2,text_size/2+text_offset_y,-0.5])
-            linear_extrude(noppen_height)
+            linear_extrude(nubs_height)
             text(text_on_brick, size=text_size, halign="center", valign="center", language=text_language);
     }
 }
