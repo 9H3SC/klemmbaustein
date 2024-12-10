@@ -21,7 +21,7 @@ text_size_back = 7; // INT > text-size (12 suits best for top text and count of 
 text_extrusion_factor = 1.0; // FLOAT > factor for text-extrusion (X * lego-unit - Info: height of nubs is 1 lego-unit)
 text_language = "de"; // STRING > which language for the text (use two letter code) [i.e. "de", "fr", etc.]
 text_offset_y = 1.5; // FLOAT > text offset in text-up/down-direction
-keyring_diameter = 2; // FLOAT > want a keyring-hole ? sets diameter of keyring (bigger than 0)
+keyring_diameter = 0; // FLOAT > want a keyring-hole ? sets diameter of keyring (bigger than 0)
 strong_brick = false; // BOOLEAN > walls at every (true) or every second (false) pipe in the inner of brick [true,false]
 
 //Circle resolution
