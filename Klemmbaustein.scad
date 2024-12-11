@@ -9,6 +9,7 @@ nubs_cnt_x = 8; // INT > count of nubs in X
 nubs_cnt_y = 2; // INT > count of nubs in Y
 nubs_on_top = true; // BOOLEAN > if nubs should be rendered or not [true, false]
 nubs_diameter_mod = 0; // FLOAT > increases the nub-diameter for 3D-Printing reasons (i.e. 0.2)
+cylinder_diamter_outer_mod = 0; //  FLOAT > increases the cylinder-diameter for 3D-Printing reasons (i.e. 0.2)
 
 brick_height = 3; // INT > height of brick in lego-units (1=plate, 3=normal height) [1,2,3,4,5,6]
 
@@ -34,7 +35,7 @@ $fs = $preview ? 2 : 0.4;
 /* 
 calling module with parameters
 */
-brick(nubs_cnt_x, nubs_cnt_y, nubs_on_top, brick_height, text_on_top, text_size_top, text_on_front, text_size_front,text_on_back, text_size_back, text_language, text_offset_y, nubs_diameter_mod, keyring_diameter, strong_brick);
+brick(nubs_cnt_x, nubs_cnt_y, nubs_on_top, brick_height, text_on_top, text_size_top, text_on_front, text_size_front,text_on_back, text_size_back, text_language, text_offset_y, nubs_diameter_mod, keyring_diameter, strong_brick,cylinder_diamter_outer_mod);
 
 /*
 module brick
@@ -51,7 +52,7 @@ module brick
 - keyring-diameter // keyring_diameter = 1
 - strong_brick // Boolean to add so much wall under the brick
 */
-module brick(nubs_cnt_x, nubs_cnt_y, nubs_on_top, brick_height, text_on_top, text_size_top, text_on_front, text_size_front, text_on_back, text_size_back, text_language, text_offset_y, nubs_diameter_mod, keyring_diameter, strong_brick) {
+module brick(nubs_cnt_x, nubs_cnt_y, nubs_on_top, brick_height, text_on_top, text_size_top, text_on_front, text_size_front, text_on_back, text_size_back, text_language, text_offset_y, nubs_diameter_mod, keyring_diameter, strong_brick, cylinder_diamter_outer_mod) {
     
     lego_unit = 1.6;
     
@@ -141,7 +142,7 @@ module brick(nubs_cnt_x, nubs_cnt_y, nubs_on_top, brick_height, text_on_top, tex
                     for (y=[1:1:nubs_cnt_y - 1]) {
                         translate([x*grid_base - grid_offset/2,y*grid_base - grid_offset/2,0]) {
                             difference() {
-                                cylinder(h=brick_height_crt-brick_wall, r=cylinder_diameter_outer/2);
+                                cylinder(h=brick_height_crt-brick_wall, r=cylinder_diameter_outer/2+cylinder_diamter_outer_mod/2);
                                 cylinder(h=brick_height_crt-brick_wall, r=cylinder_diameter_inner/2);
                             }
                         }
